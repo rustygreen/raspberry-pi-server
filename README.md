@@ -36,31 +36,49 @@ $ sudo apt install python3 idle3 pip3
 
 2. Clone the repository
 
-```batch
+```bash
 $ cd /home/pi # Or wherever you want to store your code.
 $ git clone https://github.com/rustygreen/raspberry-pi-server.git
 ```
 
 3. Install Python dependencies
 
-```batch
+```bash
 $ cd raspberry-pi-server
 $ pip3 install -r requirements.txt
 ```
 
 4. Run Server
 
-```batch
+```bash
 $ sudo python3 server.py
 ```
 
 5. Consume the services
 
-```batch
+Returns a list of pins and their state (1 or 0)
+
+```bash
 $ curl http://localhost:8080/pins
 ```
 
+Returns the state for GPIO pin #7
+
+```bash
+$ curl http://localhost:8080/pins/7
+```
+
+Sets the state of GPIO pin #7 to 1 (high)
+
+```bash
+$ curl http://localhost:8080/pins/7/1
+```
+
 You should get back a JSON list of the GPIO pins and their current state.
+
+### Usage
+
+Once the server is running you will have a number of services available to interact with your Pi GPIO pins. Below are a few examples:
 
 ## TODOs
 
