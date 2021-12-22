@@ -65,8 +65,9 @@ You should get back a JSON list of the GPIO pins and their current state.
 ## TODOs
 
 - [ ] Add unit tests
+- [ ] Add socket.io
+- [ ] Add swagger docs
 - [ ] Create Docker image and compose file
 - [ ] Update docs to show Docker use
 - [ ] Add other Raspberry Pi commands (restart, etc.)
 - [ ] Finish documentation
-- [ ] Add swagger docs
