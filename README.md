@@ -13,7 +13,7 @@ Follow the steps below to get the service running on your Pi.
 You can follow the manual steps below to get the server running on your Pi or you can execute the shell script to install the dependencies and run the server:
 
 ```bash
-sudo curl -fL https://raw.githubusercontent.com/rustygreen/raspberry-pi-server/setup.sh | sh -
+sudo curl -fL https://github.com/rustygreen/raspberry-pi-server/blob/main/setup.sh | sh -
 ```
 
 ### Raspberry Pi Setup
