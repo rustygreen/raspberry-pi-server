@@ -8,18 +8,26 @@
 
 Follow the steps below to get the service running on your Pi.
 
+### Quick Start
+
+You can follow the manual steps below to get the server running on your Pi or you can execute the shell script to install the dependencies and run the server:
+
+```bash
+sudo curl -fL https://raw.githubusercontent.com/rustygreen/raspberry-pi-server/setup.sh | sh -
+```
+
 ### Raspberry Pi Setup
 
 1. Install [Git](https://git-scm.com/) on your Raspberry Pi
 
-```batch
+```bash
 $ sudo apt update
 $ sudo apt install git
 ```
 
 2. Install [Python 3](https://www.python.org/) and [Pip 3](https://pypi.org/project/pip/) on your Raspberry Pi
 
-```batch
+```bash
 $ sudo apt update
 $ sudo apt install python3 idle3 pip3
 ```
@@ -56,8 +64,9 @@ You should get back a JSON list of the GPIO pins and their current state.
 
 ## TODOs
 
-[ ] Add unit tests
-[ ] Create Docker image and compose file
-[ ] Update docs to show Docker use
-[ ] Add other Raspberry Pi commands (restart, etc.)
-[ ] Finish documentation
+- [ ] Add unit tests
+- [ ] Create Docker image and compose file
+- [ ] Update docs to show Docker use
+- [ ] Add other Raspberry Pi commands (restart, etc.)
+- [ ] Finish documentation
+- [ ] Add swagger docs
