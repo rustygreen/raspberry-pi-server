@@ -1,3 +1,4 @@
+#!/bin/bash
 # Install dependencies.
 sudo apt update
 sudo apt install git python3 idle3 pip3
