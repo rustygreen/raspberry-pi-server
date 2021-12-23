@@ -3,6 +3,7 @@ from enum import Enum
 import logging as log
 import RPi.GPIO as GPIO
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 
 class InitialPinBehavior(Enum):
@@ -25,6 +26,7 @@ debug = False
 gpio_pins = (7, 11, 13, 15, 16, 18, 22, 29, 31, 32, 33, 36, 37)
 initial_pin_state = InitialPinBehavior.DEFAULT
 app = Flask(__name__)
+CORS(app)
 app.url_map.strict_slashes = False
 
 log.basicConfig(
