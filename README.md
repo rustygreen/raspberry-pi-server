@@ -4,6 +4,8 @@
 
 `raspberry-pi-server` is a server component designed to be ran on a Raspberry Pi which provides RESTful services to control the GPIO pins of the Raspberry Pi. This project was created in an effort to eliminate the need to create custom python scripts and constantly maintain, update, and schedule them on a Raspberry Pi. Rather, you can deploy one single service on the Pi (raspberry-pi-server), and never have to logon to the Pi again. Interaction to the Pi can be done through RESTful services using whatever client/technology you'd like. For example, check out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi-client)
 
+> This project is a good option for those who do not want to regularly work with Python on their Raspberry Pi. Rather, you can run the server and then interact with it through REST services.
+
 ## 🏁 Getting Started
 
 Follow the steps below to get the service running on your Pi.

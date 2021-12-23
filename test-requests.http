@@ -1,0 +1,10 @@
+### Get list of pins and states.
+GET http://rasp-1:8080/pins
+
+### Get state for pin number 11.
+
+GET http://rasp-1:8080/pins/11
+
+### Set the state for pin number 11 to HIGH.
+
+GET http://rasp-1:8080/pins/11/1

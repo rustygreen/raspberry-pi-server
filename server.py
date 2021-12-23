@@ -1,12 +1,29 @@
 import sys
+from enum import Enum
 import logging as log
 import RPi.GPIO as GPIO
 from flask import Flask, jsonify
+
+
+class InitialPinBehavior(Enum):
+    # Sets the initial pin state to LOW (0).
+    LOW = 0
+    # Sets the initial pin state to HIGH (1).
+    HIGH = 1
+    # Sets the pin state to the default state of the Raspberry Pi (as
+    # if the it was restarted and untouched). Pins 1-8 are defaulted
+    # to HIGH (1) while 9 and above default to LOW (0).
+    # See: https://roboticsbackend.com/raspberry-pi-gpios-default-state/
+    DEFAULT = 2
+    # Do not change the pin states - leaving them exactly how they are.
+    UNMODIFIED = 3
+
 
 host = '0.0.0.0'
 port = 8080
 debug = False
 gpio_pins = (7, 11, 13, 15, 16, 18, 22, 29, 31, 32, 33, 36, 37)
+initial_pin_state = InitialPinBehavior.DEFAULT
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
@@ -26,7 +43,7 @@ def get_all_pins():
         pin_result = {'pin': pin, 'value': get_pin_value(pin)}
         result.append(pin_result)
 
-    log.info("Retieved values for all pins")
+    log.info("Retrieved values for all pins")
     return jsonify(result)
 
 
@@ -84,7 +101,21 @@ def setup_gpio():
 
     for pin in gpio_pins:
         GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, GPIO.LOW)
+        set_initial_state(pin)
+
+
+def set_initial_state(pin):
+    if initial_pin_state == InitialPinBehavior.UNMODIFIED:
+        return
+    if initial_pin_state == InitialPinBehavior.LOW:
+        state = GPIO.LOW
+    elif initial_pin_state == InitialPinBehavior.HIGH:
+        state = GPIO.HIGH
+    elif initial_pin_state == InitialPinBehavior.DEFAULT:
+        state = GPIO.HIGH if pin < 9 else GPIO.LOW
+
+    log.debug("Setting pin '{}' to state '{}'".format(pin, state))
+    GPIO.output(pin, state)
 
 
 if __name__ == '__main__':
