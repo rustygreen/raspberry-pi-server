@@ -1,7 +1,7 @@
 import time
 import RPi
 
-retry_wait_time = 2000
+retry_wait_time = 2
 
 
 class DHT11Result:
