@@ -134,6 +134,8 @@ if __name__ == '__main__':
     try:
         setup_gpio()
         app.run(debug=debug, host=host, port=port)
+    except Exception as e:
+        log.error('Fatal application error occurred: {}'.format(e))
     finally:
         log.debug('App is shutting down, cleaning up GPIO')
         GPIO.cleanup()
