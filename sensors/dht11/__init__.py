@@ -1,7 +1,8 @@
 import time
 import RPi
 
-retry_wait_time = 2
+retry_wait_time = 3
+max_retries = 3
 
 
 class DHT11Result:
@@ -86,10 +87,14 @@ class DHT11:
         return DHT11Result(DHT11Result.ERR_NO_ERROR, temperature, humidity)
 
     def read_with_retry(self):
-        result = self.read()
-        if (result.error_code):
-            time.sleep(retry_wait_time)
+        i = 0
+        while i <= max_retries:
             result = self.read()
+            if result.is_valid:
+                break
+
+            i += 1
+            time.sleep(retry_wait_time)
 
         return result
 
