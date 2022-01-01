@@ -4,6 +4,7 @@ import logging as log
 import RPi.GPIO as GPIO
 from flask import Flask, jsonify
 from flask_cors import CORS
+from sensors.dht11 import DHT11
 
 
 class InitialPinBehavior(Enum):
@@ -66,7 +67,7 @@ def set_all_pins(value):
 @app.route('/pins/<int:pin>')
 def get_pin(pin):
     pin_value = get_pin_value(pin)
-    log.info("Retieved value for pin '{}' (value: {})".format(
+    log.info("Retrieved value for pin '{}' (value: {})".format(
         str(pin), str(pin_value)))
     return str(pin_value)
 
@@ -83,6 +84,14 @@ def set_pin(pin, value):
 
     log.info("Set value for pin '{}' (value: {})".format(pin, pin_value))
     return str(pin_value)
+
+
+@app.route('/sensors/dht11/<int:pin>')
+def get_sensor_dht11(pin):
+    instance = DHT11(pin=pin)
+    result = instance.read_with_retry()
+    log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
+    return jsonify(result.to_dict())
 
 
 def get_pin_value(pin):

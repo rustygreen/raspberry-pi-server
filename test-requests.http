@@ -8,3 +8,7 @@ GET http://rasp-1:8080/pins/11
 ### Set the state for pin number 11 to HIGH.
 
 GET http://rasp-1:8080/pins/11/1
+
+### Get sensor reading
+
+GET http://rasp-1:8080/sensors/dht11/7
