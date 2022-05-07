@@ -10,6 +10,6 @@ cd raspberry-pi-server
 
 # Run server.
 pip3 install -r requirements.txt
-sudo python3 server.py
+sudo python3 ./src/server.py
 
-echo "Server is running on http://localhost:8080"
+echo "Server is running on http://localhost:5000"

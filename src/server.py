@@ -1,4 +1,26 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""Raspberry Pi Server
+
+`raspberry-pi-server` is a server component designed to be ran on a Raspberry Pi
+which provides RESTful services to control the GPIO pins of the Raspberry Pi.
+This project was created in an effort to eliminate the need to create custom
+python scripts and constantly maintain, update, and schedule them on a Raspberry Pi.
+Rather, you can deploy one single service on the Pi (raspberry-pi-server), and
+never have to logon to the Pi again. Interaction to the Pi can be done through
+RESTful services using whatever client/technology you'd like. For example, check
+out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi-client)
+"""
+__author__ = "Russell Green"
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Russell.Green"
+__email__ = "me@rusty.green"
+__status__ = "Production"
+
 import sys
+import os
 from enum import Enum
 import logging as log
 import RPi.GPIO as GPIO
@@ -21,8 +43,9 @@ class InitialPinBehavior(Enum):
     UNMODIFIED = 3
 
 
-host = '0.0.0.0'
-port = 8080
+host = os.environ['SERVER_HOST'] or '0.0.0.0'
+port = os.environ['SERVER_PORT'] or 5000
+log_level = os.environ['SERVER_LOG_LEVEL'] or log.WARN
 debug = False
 gpio_pins = (7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 36, 37)
 initial_pin_state = InitialPinBehavior.DEFAULT
@@ -31,7 +54,7 @@ CORS(app)
 app.url_map.strict_slashes = False
 
 log.basicConfig(
-    level=log.DEBUG,
+    level=log_level,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
         log.StreamHandler(sys.stdout)
@@ -39,8 +62,21 @@ log.basicConfig(
 )
 
 
+@app.route('/health')
+def health_check():
+    """Health check
+
+    Returns a value to ensure the service is up.
+    """
+    return 'healthy'
+
+
 @app.route('/pins')
 def get_all_pins():
+    """Get pins
+
+    Retries a list of all GPIO pins and theire current values.
+    """
     result = []
     for pin in gpio_pins:
         pin_result = {'pin': pin, 'value': get_pin_value(pin)}
@@ -52,6 +88,10 @@ def get_all_pins():
 
 @app.route('/pins/all/<int:value>')
 def set_all_pins(value):
+    """Set pins to value
+
+    Set all GPIO pins to a specified value.
+    """
     result = []
     for pin in gpio_pins:
         new_value = set_get_pin_value(pin, value)
@@ -66,6 +106,10 @@ def set_all_pins(value):
 
 @app.route('/pins/<int:pin>')
 def get_pin(pin):
+    """Get pin value
+
+    Gets the current value for a given GPIO pin.
+    """
     pin_value = get_pin_value(pin)
     log.info("Retrieved value for pin '{}' (value: {})".format(
         str(pin), str(pin_value)))
@@ -74,6 +118,10 @@ def get_pin(pin):
 
 @app.route('/pins/<int:pin>/<int:value>')
 def set_pin(pin, value):
+    """Set pin value
+
+    Sets a GPIO pin to a specified value.
+    """
     pin_value = set_get_pin_value(pin, value)
 
     if (value != pin_value):
@@ -88,26 +136,55 @@ def set_pin(pin, value):
 
 @app.route('/sensors/dht11/<int:pin>')
 def get_sensor_dht11(pin):
+    """Get DHT11 sensor reading
+
+    Gets a reading for a DHT11 sensor.
+    """
     instance = DHT11(pin=pin)
     result = instance.read_with_retry()
     log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
     return jsonify(result.to_dict())
 
 
+def temperature_of_raspberry_pi():
+    """Get Pi temperature
+
+    Gets the temperature of the Raspberry Pi.
+    """
+    cpu_temp = os.popen("vcgencmd measure_temp").readline()
+    return cpu_temp.replace("temp=", "")
+
+
 def get_pin_value(pin):
+    """Gets a pin value by GPIO pin number
+
+    Gets the value of a GPIO pin.
+    """
     return GPIO.input(pin)
 
 
 def set_pin_value(pin, value):
+    """Sets pin value
+
+    Sets a GPIO pin value.
+    """
     GPIO.output(pin, value)
 
 
 def set_get_pin_value(pin, value):
+    """Sets pin value and then returns the value
+
+    Sets and gets a GPIO pin value.
+    """
     set_pin_value(pin, value)
     return get_pin_value(pin)
 
 
 def setup_gpio():
+    """Sets up the GPIO pins
+
+    Sets up the Raspberry Pi and GPIO pins for initial use.
+    """
     GPIO.setmode(GPIO.BOARD)
 
     for pin in gpio_pins:
@@ -116,6 +193,10 @@ def setup_gpio():
 
 
 def set_initial_state(pin):
+    """Sets the initial state for a given pin
+
+    Sets up a pin's initial state based on the configured behavior.
+    """
     if initial_pin_state == InitialPinBehavior.UNMODIFIED:
         return
     if initial_pin_state == InitialPinBehavior.LOW:
