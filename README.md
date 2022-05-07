@@ -84,10 +84,10 @@ Once the server is running you will have a number of services available to inter
 
 ## TODOs
 
+- [x] Create Docker image and compose file
 - [ ] Add unit tests
 - [ ] Add socket.io
 - [ ] Add swagger docs
-- [ ] Create Docker image and compose file
 - [ ] Update docs to show Docker use
 - [ ] Add other Raspberry Pi commands (restart, etc.)
 - [ ] Finish documentation
