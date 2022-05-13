@@ -1,4 +1,4 @@
-FROM arm32v7/python:3.7.10-buster
+FROM arm64v7/python:3.7.10-buster
 
 COPY ./src /app
 COPY ./requirements.txt /app
