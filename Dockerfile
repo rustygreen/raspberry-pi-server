@@ -11,5 +11,5 @@ RUN apt-get update \
 && apt-get clean \
 && pip3 install -r requirements.txt
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 CMD ["server.py"]
