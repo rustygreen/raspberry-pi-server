@@ -18,6 +18,7 @@ jobs:
 
     steps:
       - uses: pguyot/arm-runner-action@v2
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
