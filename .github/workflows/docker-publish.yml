@@ -38,6 +38,6 @@ jobs:
         with:
           context: .
           push: true
-          platform: ${{ env.IMAGE_TARGET_PLATFORM }}
+          platforms: ${{ env.IMAGE_TARGET_PLATFORM }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
