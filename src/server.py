@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """Raspberry Pi Server
 
 `raspberry-pi-server` is a server component designed to be ran on a Raspberry Pi
