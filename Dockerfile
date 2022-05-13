@@ -1,10 +1,10 @@
-FROM arm32v7/python:3.7.10-buster
+FROM python:3.7-alpine
 
 COPY ./src /app
 COPY ./requirements.txt /app
 WORKDIR /app
 
-RUN pip3 install -r requirements.txt
+RUN CFLAGS="-fcommon" pip3 install -r requirements.txt
 
 ENTRYPOINT ["python3"]
 CMD ["server.py"]
