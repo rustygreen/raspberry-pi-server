@@ -7,6 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  IMAGE_TARGET_PLATFORM: "linux/arm/v7"
 
 jobs:
   build-and-push-image:
@@ -37,6 +38,6 @@ jobs:
         with:
           context: .
           push: true
-          platform: "linux/arm/v7"
+          platform: ${{ env.IMAGE_TARGET_PLATFORM }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

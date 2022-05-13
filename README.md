@@ -12,75 +12,47 @@ Follow the steps below to get the service running on your Pi.
 
 ### Quick Start
 
-You can follow the manual steps below to get the server running on your Pi or you can execute the shell script to install the dependencies and run the server:
+From your rasperry Pi:
 
-```bash
-sudo curl -fL https://github.com/rustygreen/raspberry-pi-server/blob/main/setup.sh | sh -
+#### Docker
+
+```
+docker run --privileged -d --restart=unless-stopped -p 80:5000 ghcr.io/rustygreen/raspberry-pi-server:main
 ```
 
-### Raspberry Pi Setup
+#### Docker Compose
 
-1. Install [Git](https://git-scm.com/) on your Raspberry Pi
+docker-compose.yml
 
-```bash
-$ sudo apt update
-$ sudo apt install git
+```yml
+version: "2"
+services:
+  # Raspberry pi server
+  pi-server:
+    image: ghcr.io/rustygreen/raspberry-pi-server:main
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 8081:5000
 ```
 
-2. Install [Python 3](https://www.python.org/) and [Pip 3](https://pypi.org/project/pip/) on your Raspberry Pi
-
 ```bash
-$ sudo apt update
-$ sudo apt install python3 idle3 pip3
+docker-compose up
 ```
 
-### Deploy Server to Pi
-
-2. Clone the repository
-
-```bash
-$ cd /home/pi # Or wherever you want to store your code.
-$ git clone https://github.com/rustygreen/raspberry-pi-server.git
-```
-
-3. Install Python dependencies
-
-```bash
-$ cd raspberry-pi-server
-$ pip3 install -r requirements.txt
-```
-
-4. Run Server
-
-```bash
-$ sudo python3 server.py
-```
-
-5. Consume the services
-
-Returns a list of pins and their state (1 or 0)
-
-```bash
-$ curl http://localhost:8080/pins
-```
-
-Returns the state for GPIO pin #7
-
-```bash
-$ curl http://localhost:8080/pins/7
-```
-
-Sets the state of GPIO pin #7 to 1 (high)
-
-```bash
-$ curl http://localhost:8080/pins/7/1
-```
-
-You should get back a JSON list of the GPIO pins and their current state.
+If you don't want to use Docker check out the [Run without Docker docs](./docs/run-without-docker.md)
 
 ### Usage
 
 Once the server is running you will have a number of services available to interact with your Pi GPIO pins. Below are a few examples:
+
+```bash
+GET http://YOUR_PI/pins # Retrieves a list of pins and their states
+```
+
+### Development
+
+See [Development docs](./docs/development.md)
 
 ## TODOs
 

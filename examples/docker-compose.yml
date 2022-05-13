@@ -1,0 +1,8 @@
+version: "3"
+services:
+  # Raspberry pi server
+  pi-server:
+    image: ghcr.io/rustygreen/raspberry-pi-server:main
+    restart: unless-stopped
+    ports:
+      - 8081:5000

@@ -1,4 +1,8 @@
 #!/bin/bash
+# The following script will run the raspberry-pi-server via the manual
+# setup/installation process. It is recommended to use docker instead,
+# but this is a good option if you don't use containers.
+
 # Install dependencies.
 sudo apt update
 sudo apt install git python3 idle3 pip3
