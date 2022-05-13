@@ -1,4 +1,4 @@
-FROM python:3
+FROM arm32v7/python:3
 
 COPY ./src /app
 COPY ./requirements.txt /app
