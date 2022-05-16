@@ -1,10 +1,10 @@
-FROM python:3
+FROM python:alpine3.15
 
 COPY ./src /app
 COPY ./requirements.txt /app
 WORKDIR /app
 
-RUN CFLAGS="-fcommon" pip install -r requirements.txt
+RUN CFLAGS="-fcommon" pip3 install -r requirements.txt
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 CMD ["server.py"]
