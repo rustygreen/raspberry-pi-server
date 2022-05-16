@@ -40,9 +40,9 @@ class InitialPinBehavior(Enum):
     UNMODIFIED = 3
 
 
-host = os.environ['SERVER_HOST'] or '0.0.0.0'
-port = os.environ['SERVER_PORT'] or 5000
-log_level = os.environ['SERVER_LOG_LEVEL'] or log.WARN
+host = os.getenv('SERVER_HOST') or '0.0.0.0'
+port = os.getenv('SERVER_PORT') or 5000
+log_level = os.getenv('SERVER_LOG_LEVEL') or log.WARN
 debug = False
 gpio_pins = (7, 11, 12, 13, 15, 16, 18, 22, 29, 31, 32, 33, 36, 37)
 initial_pin_state = InitialPinBehavior.DEFAULT
