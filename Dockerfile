@@ -1,4 +1,4 @@
-FROM python:3.7.10-buster
+FROM python
 
 COPY ./src /app
 COPY ./requirements.txt /app
