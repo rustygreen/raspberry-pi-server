@@ -24,7 +24,7 @@ import RPi.GPIO as GPIO
 from flask import Flask, jsonify
 from flask_cors import CORS
 from sensors.dht11 import DHT11
-
+from gpiozero import DistanceSensor
 
 class InitialPinBehavior(Enum):
     # Sets the initial pin state to LOW (0).
@@ -72,7 +72,7 @@ def health_check():
 def get_all_pins():
     """Get pins
 
-    Retries a list of all GPIO pins and theire current values.
+    Retries a list of all GPIO pins and their current values.
     """
     result = []
     for pin in gpio_pins:
@@ -141,6 +141,19 @@ def get_sensor_dht11(pin):
     result = instance.read_with_retry()
     log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
     return jsonify(result.to_dict())
+
+
+@app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
+def get_sensor_hcsr04(trigger_pin, echo_pin):
+    """Get HC-SR04 sensor reading
+
+    Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
+    See: https://adafru.it/3942
+    """
+    with DistanceSensor(echo=echo_pin, trigger=trigger_pin) as sensor:
+        result = { "distance": sensor.distance, "temperature": sensor.temperature }
+        log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
+        return jsonify(result)
 
 
 def temperature_of_raspberry_pi():
