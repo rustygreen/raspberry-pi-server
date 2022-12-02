@@ -152,7 +152,9 @@ def get_sensor_hcsr04(trigger_pin, echo_pin):
     See: https://adafru.it/3942
     """
     factory = RPiGPIOFactory()
-    with DistanceSensor(echo=echo_pin, trigger=trigger_pin, pin_factory=factory) as sensor:
+    echo = str(echo_pin) + "BOARD"
+    trigger = str(trigger_pin) + "BOARD"
+    with DistanceSensor(echo=echo, trigger=trigger, pin_factory=factory) as sensor:
         result = { "distance": sensor.distance, "temperature": sensor.temperature }
         log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
         return jsonify(result)
@@ -197,7 +199,9 @@ def setup_gpio():
 
     Sets up the Raspberry Pi and GPIO pins for initial use.
     """
-    GPIO.setmode(GPIO.BOARD)
+    # todo
+    # GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
 
     for pin in gpio_pins:
         GPIO.setup(pin, GPIO.OUT)
