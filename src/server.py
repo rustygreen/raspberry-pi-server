@@ -24,6 +24,7 @@ import RPi.GPIO as GPIO
 from flask import Flask, jsonify
 from flask_cors import CORS
 from sensors.dht11 import DHT11
+from gpiozero.pins.rpigpio import RPiGPIOFactory
 from gpiozero import DistanceSensor
 
 class InitialPinBehavior(Enum):
@@ -150,7 +151,8 @@ def get_sensor_hcsr04(trigger_pin, echo_pin):
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
-    with DistanceSensor(echo=echo_pin, trigger=trigger_pin) as sensor:
+    factory = RPiGPIOFactory()
+    with DistanceSensor(echo=echo_pin, trigger=trigger_pin, pin_factory=factory) as sensor:
         result = { "distance": sensor.distance, "temperature": sensor.temperature }
         log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
         return jsonify(result)
