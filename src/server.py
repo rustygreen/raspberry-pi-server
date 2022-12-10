@@ -25,6 +25,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from sensors.dht11 import DHT11
 
+
 class InitialPinBehavior(Enum):
     # Sets the initial pin state to LOW (0).
     LOW = 0
@@ -58,7 +59,7 @@ log.basicConfig(
 )
 
 
-@app.route('/health')
+@app.route('/healthz')
 def health_check():
     """Health check
 
@@ -67,20 +68,11 @@ def health_check():
     return 'healthy'
 
 
-@app.route('/version')
-def health_check():
-    """Returns version
-
-    Returns the current application versino.
-    """
-    return __version__
-
-
 @app.route('/pins')
 def get_all_pins():
     """Get pins
 
-    Retries a list of all GPIO pins and their current values.
+    Retries a list of all GPIO pins and theire current values.
     """
     result = []
     for pin in gpio_pins:
@@ -145,6 +137,17 @@ def get_sensor_dht11(pin):
 
     Gets a reading for a DHT11 sensor.
     """
+    instance = DHT11(pin=pin)
+    result = instance.read_with_retry()
+    log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
+    return jsonify(result.to_dict())
+
+
+@app.route('/sensors/dht11/<int:pin>')
+def get_sensor_dht11(pin):
+    """Get DHT11 sensor reading
+    Gets a reading for a DHT11 sensor.
+    """
     raise Exception('Not implemented yet')
     # instance = DHT11(pin=pin)
     # result = instance.read_with_retry()
@@ -155,7 +158,6 @@ def get_sensor_dht11(pin):
 @app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
 def get_sensor_hcsr04(trigger_pin, echo_pin):
     """Get HC-SR04 sensor reading
-
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
@@ -208,9 +210,7 @@ def setup_gpio():
 
     Sets up the Raspberry Pi and GPIO pins for initial use.
     """
-    # todo
     GPIO.setmode(GPIO.BOARD)
-    # GPIO.setmode(GPIO.BCM)
 
     for pin in gpio_pins:
         GPIO.setup(pin, GPIO.OUT)
