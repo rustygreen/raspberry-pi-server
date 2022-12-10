@@ -24,8 +24,6 @@ import RPi.GPIO as GPIO
 from flask import Flask, jsonify
 from flask_cors import CORS
 from sensors.dht11 import DHT11
-from gpiozero.pins.rpigpio import RPiGPIOFactory
-from gpiozero import DistanceSensor
 
 class InitialPinBehavior(Enum):
     # Sets the initial pin state to LOW (0).
@@ -67,6 +65,15 @@ def health_check():
     Returns a value to ensure the service is up.
     """
     return 'healthy'
+
+
+@app.route('/version')
+def health_check():
+    """Returns version
+
+    Returns the current application versino.
+    """
+    return __version__
 
 
 @app.route('/pins')
@@ -138,10 +145,11 @@ def get_sensor_dht11(pin):
 
     Gets a reading for a DHT11 sensor.
     """
-    instance = DHT11(pin=pin)
-    result = instance.read_with_retry()
-    log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
-    return jsonify(result.to_dict())
+    raise Exception('Not implemented yet')
+    # instance = DHT11(pin=pin)
+    # result = instance.read_with_retry()
+    # log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
+    # return jsonify(result.to_dict())
 
 
 @app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
@@ -151,13 +159,14 @@ def get_sensor_hcsr04(trigger_pin, echo_pin):
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
-    factory = RPiGPIOFactory()
-    echo = str(echo_pin) + "BOARD"
-    trigger = str(trigger_pin) + "BOARD"
-    with DistanceSensor(echo=echo, trigger=trigger, pin_factory=factory) as sensor:
-        result = { "distance": sensor.distance, "temperature": sensor.temperature }
-        log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
-        return jsonify(result)
+    raise Exception('Not implemented yet')
+    # factory = RPiGPIOFactory()
+    # echo = str(echo_pin) + "BOARD"
+    # trigger = str(trigger_pin) + "BOARD"
+    # with DistanceSensor(echo=echo, trigger=trigger, pin_factory=factory) as sensor:
+    #     result = { "distance": sensor.distance, "temperature": sensor.temperature }
+    #     log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
+    #     return jsonify(result)
 
 
 def temperature_of_raspberry_pi():
@@ -200,8 +209,8 @@ def setup_gpio():
     Sets up the Raspberry Pi and GPIO pins for initial use.
     """
     # todo
-    # GPIO.setmode(GPIO.BOARD)
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
+    # GPIO.setmode(GPIO.BCM)
 
     for pin in gpio_pins:
         GPIO.setup(pin, GPIO.OUT)
