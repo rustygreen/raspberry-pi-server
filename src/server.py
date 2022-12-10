@@ -143,18 +143,6 @@ def get_sensor_dht11(pin):
     return jsonify(result.to_dict())
 
 
-@app.route('/sensors/dht11/<int:pin>')
-def get_sensor_dht11(pin):
-    """Get DHT11 sensor reading
-    Gets a reading for a DHT11 sensor.
-    """
-    raise Exception('Not implemented yet')
-    # instance = DHT11(pin=pin)
-    # result = instance.read_with_retry()
-    # log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
-    # return jsonify(result.to_dict())
-
-
 @app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
 def get_sensor_hcsr04(trigger_pin, echo_pin):
     """Get HC-SR04 sensor reading
