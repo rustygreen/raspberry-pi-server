@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "0.0.0-rc.1"
+__version__ = "0.0.0-rc.2"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
@@ -21,7 +21,7 @@ import os
 from enum import Enum
 import logging as log
 import RPi.GPIO as GPIO
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from sensors.dht11 import DHT11
 from sensors.hcsr04 import HCSR04, PULSE_TIME, SENSOR_SETTLE_DELAY
