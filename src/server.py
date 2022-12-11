@@ -82,7 +82,7 @@ def version():
 def get_all_pins():
     """Get pins
 
-    Retries a list of all GPIO pins and theire current values.
+    Retries a list of all GPIO pins and their current values.
     """
     result = []
     for pin in gpio_pins:
@@ -154,11 +154,13 @@ def get_sensor_dht11(pin):
 
 
 @app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
-def get_sensor_hcsr04(trigger_pin, echo_pin, sensor_settle_delay=SENSOR_SETTLE_DELAY, pulse_time=PULSE_TIME):
+def get_sensor_hcsr04(trigger_pin, echo_pin):
     """Get HC-SR04 sensor reading
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
+    sensor_settle_delay = request.args.get("delay", default=SENSOR_SETTLE_DELAY, type=float)
+    pulse_time = request.args.get("pulse", default=PULSE_TIME, type=float)
     sensor = HCSR04(trigger_pin=trigger_pin, echo_pin=echo_pin, sensor_settle_delay=sensor_settle_delay, pulse_time=pulse_time)
     result = sensor.read()
     log.info("Retrieved HC-SR04 sensor reading for pin 'trigger: {}, echo: {}'".format(trigger_pin, echo_pin))
@@ -230,7 +232,7 @@ def set_initial_state(pin):
 
 
 if __name__ == '__main__':
-    log.info('Starting app at {}:{} (debug:{})'.format(host, port, debug))
+    log.info('Starting app at {}:{} (debug:{}). Version {}'.format(host, port, debug, __version__))
     try:
         setup_gpio()
         app.run(debug=debug, host=host, port=port)
