@@ -24,6 +24,7 @@ import RPi.GPIO as GPIO
 from flask import Flask, jsonify
 from flask_cors import CORS
 from sensors.dht11 import DHT11
+from sensors.hcsr04 import HCSR04, PULSE_TIME, SENSOR_SETTLE_DELAY
 
 
 class InitialPinBehavior(Enum):
@@ -137,26 +138,22 @@ def get_sensor_dht11(pin):
 
     Gets a reading for a DHT11 sensor.
     """
-    instance = DHT11(pin=pin)
-    result = instance.read_with_retry()
+    sensor = DHT11(pin=pin)
+    result = sensor.read_with_retry()
     log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
     return jsonify(result.to_dict())
 
 
 @app.route('/sensors/hcsr04/<int:trigger_pin>/<int:echo_pin>')
-def get_sensor_hcsr04(trigger_pin, echo_pin):
+def get_sensor_hcsr04(trigger_pin, echo_pin, sensor_settle_delay=SENSOR_SETTLE_DELAY, pulse_time=PULSE_TIME):
     """Get HC-SR04 sensor reading
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
-    raise Exception('Not implemented yet')
-    # factory = RPiGPIOFactory()
-    # echo = str(echo_pin) + "BOARD"
-    # trigger = str(trigger_pin) + "BOARD"
-    # with DistanceSensor(echo=echo, trigger=trigger, pin_factory=factory) as sensor:
-    #     result = { "distance": sensor.distance, "temperature": sensor.temperature }
-    #     log.info("Retrieved HC-SR04 sensor reading for pins trigger: '{}', echo: '{}'".format(trigger_pin, echo_pin))
-    #     return jsonify(result)
+    sensor = HCSR04(trigger_pin=trigger_pin, echo_pin=echo_pin, sensor_settle_delay=sensor_settle_delay, pulse_time=pulse_time)
+    result = sensor.read()
+    log.info("Retrieved HC-SR04 sensor reading for pin 'trigger: {}, echo: {}'".format(trigger_pin, echo_pin))
+    return jsonify(result)
 
 
 def temperature_of_raspberry_pi():
