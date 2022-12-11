@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.0.0-rc.1"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
