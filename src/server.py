@@ -165,7 +165,7 @@ def get_sensor_hcsr04(trigger_pin, echo_pin):
     args = {'trigger_pin': trigger_pin, 'echo_pin': echo_pin}
     args.update(request.args)
 
-    sensor = HCSR04(args)
+    sensor = HCSR04(**args)
     result = sensor.read()
     log.info("Retrieved HC-SR04 sensor reading for pin 'trigger: {}, echo: {}'".format(trigger_pin, echo_pin))
     return jsonify(result)
