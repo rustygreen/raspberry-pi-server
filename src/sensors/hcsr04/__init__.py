@@ -4,10 +4,6 @@ from enum import Enum
 import RPi.GPIO as GPIO
 
 
-SENSOR_SETTLE_DELAY = 0.1
-PULSE_TIME = 0.00001
-
-
 class OutputUnit(Enum):
     CENTIMETERS = 'cm'
     MILLIMETERS = 'mm'
@@ -21,8 +17,8 @@ class HCSR04:
     def __init__(self, **kwargs):
         self.trigger_pin = None
         self.echo_pin = None
-        self.sensor_settle_delay = 2
-        self.pulse_time = PULSE_TIME
+        self.sensor_settle_delay = 0.1
+        self.pulse_time = 0.00001
         self.timeout_seconds = 2
         self.output_unit = OutputUnit.CENTIMETERS.value
         self.__read_start_time = None
