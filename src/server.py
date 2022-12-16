@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "0.0.0-rc.2"
+__version__ = "0.0.0-rc.3"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
@@ -24,7 +24,7 @@ import RPi.GPIO as GPIO
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from sensors.dht11 import DHT11
-from sensors.hcsr04 import HCSR04, PULSE_TIME, SENSOR_SETTLE_DELAY
+from sensors.hcsr04 import HCSR04
 
 
 class InitialPinBehavior(Enum):
@@ -148,6 +148,7 @@ def get_sensor_dht11(pin):
     Gets a reading for a DHT11 sensor.
     """
     sensor = DHT11(pin=pin)
+    log.info("Reading DHT11 sensor for pin '{}'".format(pin))
     result = sensor.read_with_retry()
     log.info("Retrieved DHT11 sensor reading for pin '{}'".format(pin))
     return jsonify(result.to_dict())
@@ -159,9 +160,12 @@ def get_sensor_hcsr04(trigger_pin, echo_pin):
     Gets a reading for a HC-SR04 ultrasonic sonar distance sensor.
     See: https://adafru.it/3942
     """
-    sensor_settle_delay = request.args.get("delay", default=SENSOR_SETTLE_DELAY, type=float)
-    pulse_time = request.args.get("pulse", default=PULSE_TIME, type=float)
-    sensor = HCSR04(trigger_pin=trigger_pin, echo_pin=echo_pin, sensor_settle_delay=sensor_settle_delay, pulse_time=pulse_time)
+    log.info(
+        "Reading HC-SR04 sensor for pin 'trigger: {}, echo: {}'".format(trigger_pin, echo_pin))
+    args = {'trigger_pin': trigger_pin, 'echo_pin': echo_pin}
+    args.update(request.args)
+
+    sensor = HCSR04(args)
     result = sensor.read()
     log.info("Retrieved HC-SR04 sensor reading for pin 'trigger: {}, echo: {}'".format(trigger_pin, echo_pin))
     return jsonify(result)
@@ -206,6 +210,7 @@ def setup_gpio():
 
     Sets up the Raspberry Pi and GPIO pins for initial use.
     """
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
 
     for pin in gpio_pins:
@@ -232,7 +237,8 @@ def set_initial_state(pin):
 
 
 if __name__ == '__main__':
-    log.info('Starting app at {}:{} (debug:{}). Version {}'.format(host, port, debug, __version__))
+    log.info('Starting app at {}:{} (debug:{}). Version {}'.format(
+        host, port, debug, __version__))
     try:
         setup_gpio()
         app.run(debug=debug, host=host, port=port)
