@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "0.0.0-rc.5"
+__version__ = "1.1.0"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
@@ -52,6 +52,7 @@ initial_pin_state = InitialPinBehavior.DEFAULT
 app = Flask(__name__)
 CORS(app)
 app.url_map.strict_slashes = False
+start_time = datetime.datetime.now()
 
 
 log.basicConfig(
@@ -77,6 +78,24 @@ def version():
     Returns the module version.
     """
     return __version__
+
+
+@app.route("/info")
+def info():
+    """Info
+
+    Returns the deployment info.
+    """
+    info = {
+        "version": __version__,
+        "host": host,
+        "port": port,
+        "logLevel": log_level,
+        "isDebug": debug,
+        "startTime": start_time,
+    }
+
+    return jsonify(info)
 
 
 @app.route("/pins")
