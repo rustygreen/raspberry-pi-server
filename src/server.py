@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
@@ -251,6 +251,7 @@ def set_pin_history(pin):
     history = {"lastChange": datetime.datetime.now()}
     record = get_pin_history(pin)
     record.update(history)
+    gpio_pin_history[pin] = record
 
 
 def setup_gpio():
