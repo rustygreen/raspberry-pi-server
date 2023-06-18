@@ -11,7 +11,7 @@ out the [raspberry-pi-client project](https://github.com/rustygreen/raspberry-pi
 """
 __author__ = "Russell Green"
 __license__ = "MIT"
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 __maintainer__ = "Russell.Green"
 __email__ = "me@rusty.green"
 __status__ = "Production"
@@ -241,13 +241,21 @@ def set_get_pin_value(pin, value):
 
 
 def get_pin_history(pin):
+    """Gets pin history
+
+    Retrieves the pin history record if exists, otherwise creates a new one.
+    """
     if pin in gpio_pin_history:
         return gpio_pin_history[pin]
     else:
-        return {"lastValue": None}
+        return {"lastChange": None}
 
 
 def set_pin_history(pin):
+    """Sets pin history
+
+    Sets a pin history record for a given pin.
+    """
     history = {"lastChange": datetime.datetime.now()}
     record = get_pin_history(pin)
     record.update(history)
